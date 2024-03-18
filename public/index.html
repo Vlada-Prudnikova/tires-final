@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tire Inventory Management</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      h1 {
+        margin-bottom: 20px;
+      }
+      .input-container {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+      }
+      .input-container label {
+        margin-right: 10px;
+      }
+      .inventory {
+        margin-top: 30px;
+        border-collapse: collapse;
+        width: 50%;
+      }
+      .inventory th,
+      .inventory td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+      }
+      .inventory th {
+        background-color: #f2f2f2;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Tire Inventory Management</h1>
+
+    <div class="input-container">
+      <label for="brand">Brand:</label>
+      <input type="text" id="brand" />
+    </div>
+    <div class="input-container">
+      <label for="quantity">Quantity:</label>
+      <input type="number" id="quantity" />
+    </div>
+    <div class="input-container">
+      <label for="width">Width:</label>
+      <input type="number" id="width" />
+    </div>
+    <div class="input-container">
+      <label for="aspectRatio">Aspect Ratio:</label>
+      <input type="number" id="aspectRatio" />
+    </div>
+    <div class="input-container">
+      <label for="rimDiameter">Rim Diameter:</label>
+      <input type="number" id="rimDiameter" />
+    </div>
+    <form action="http://localhost:3000/api/save-tire-inventory" method="POST">
+      <button id="saveButton" onclick="addTires()">Add Tires</button>
+    </form>
+
+    <h2>Sell Tires</h2>
+    <div class="input-container">
+      <label for="sellBrand">Brand:</label>
+      <input type="text" id="sellBrand" />
+    </div>
+    <div class="input-container">
+      <label for="sellQuantity">Quantity:</label>
+      <input type="number" id="sellQuantity" />
+    </div>
+    <div class="input-container">
+      <label for="sellWidth">Width:</label>
+      <input type="number" id="sellWidth" />
+    </div>
+    <div class="input-container">
+      <label for="sellAspectRatio">Aspect Ratio:</label>
+      <input type="number" id="sellAspectRatio" />
+    </div>
+    <div class="input-container">
+      <label for="sellRimDiameter">Rim Diameter:</label>
+      <input type="number" id="sellRimDiameter" />
+    </div>
+    <div class="input-container">
+      <label for="sellNotes">Notes:</label>
+      <input type="text" id="sellNotes" />
+    </div>
+    <form action="http://localhost:3000/api/save-sold-tires" method="POST">
+      <button id="saveSoldButton" onclick="sellTires()">Sell Tires</button>
+    </form>
+
+    <h2>Current Inventory</h2>
+    <table class="inventory">
+      <thead>
+        <tr>
+          <th>Brand</th>
+          <th>Quantity</th>
+          <th>Size</th>
+        </tr>
+      </thead>
+      <tbody id="inventoryBody">
+        <!-- Inventory items will be dynamically added here -->
+      </tbody>
+    </table>
+
+    <h2>Tires Sold</h2>
+    <div id="tiresSold">
+      <!-- Sold tires information will be dynamically added here -->
+    </div>
+
+    <script src="./index.js">
+      // Function to initialize inventory from localStorage
+    
+    </script> 
+    <script>
+      document.getElementById('saveButton').addEventListener('click', function(event) {
+        const brand = document.getElementById('brand').value;
+        const quantity = document.getElementById('quantity').value;
+        const size = document.getElementById('size').value;
+
+        const formData = {
+            brand: brand,
+            quantity: quantity,
+            size: size
+        };
+
+        fetch('/api/save-tire-inventory', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formData)
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to save tire inventory');
+            }
+            return response.text();
+        })
+        .then(data => {
+            console.log(data);
+            alert(data); // Show success message
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Failed to save tire inventory'); // Show error message
+        });
+    });
+    document.getElementById('saveSoldButton').addEventListener('click', function(event) {
+      const brand = document.getElementById('soldBrand').value;
+      const quantity = document.getElementById('soldQuantity').value;
+      const size = document.getElementById('soldSize').value;
+
+      const formData = {
+          brand: brand,
+          quantity: quantity,
+          size: size
+      };
+
+      fetch('/api/save-sold-tires', {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(formData)
+      })
+      .then(response => {
+          if (!response.ok) {
+              throw new Error('Failed to save sold tires data');
+          }
+          return response.text();
+      })
+      .then(data => {
+          console.log(data);
+          alert(data); // Show success message
+      })
+      .catch(error => {
+          console.error('Error:', error);
+          alert('Failed to save sold tires data'); // Show error message
+      });
+  });
+    </script>
+  </body>
+</html>
